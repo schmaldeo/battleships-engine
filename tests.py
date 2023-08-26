@@ -60,11 +60,13 @@ class TestGame(unittest.TestCase):
              [Field.EMPTY, Field.EMPTY, Field.EMPTY, Field.EMPTY, Field.EMPTY, Field.EMPTY, Field.EMPTY, Field.EMPTY]])
 
     def test_custom_board_size(self):
-        game = Game(2, 2)
+        game = Game(4, 4)
         self.assertTrue(
             game.board ==
-            [[Field.EMPTY, Field.EMPTY],
-             [Field.EMPTY, Field.EMPTY]])
+            [[Field.EMPTY, Field.EMPTY, Field.EMPTY, Field.EMPTY],
+             [Field.EMPTY, Field.EMPTY, Field.EMPTY, Field.EMPTY],
+             [Field.EMPTY, Field.EMPTY, Field.EMPTY, Field.EMPTY],
+             [Field.EMPTY, Field.EMPTY, Field.EMPTY, Field.EMPTY]])
 
     def test_hit_ship(self):
         game = Game(4, 4)
