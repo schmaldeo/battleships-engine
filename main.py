@@ -76,6 +76,7 @@ class Game:
                 raise Exception("Field already taken")
             temp_board[coordinate[0]][coordinate[1]] = Field.TAKEN
         self.board = temp_board
+        return ship
 
     def shoot(self, y: int, x: int):
         if self.board[y][x] == Field.TAKEN:
