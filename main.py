@@ -1,4 +1,6 @@
 from enum import Enum
+import random
+import math
 
 
 class Field(Enum):
@@ -45,7 +47,6 @@ class Ship:
 
     def hit(self, y, x):
         self.hp -= 1
-        self.coordinates.remove([y, x])
         if self.hp == 0:
             self.sunken = True
         return self.sunken
@@ -61,6 +62,7 @@ class ShotResponse:
 
 class Game:
     def __init__(self, width: int = 8, height: int = 8):
+        # TODO limit on width and height
         self.width = width
         self.height = height
         self.board = [[Field.EMPTY for _ in range(self.width)] for _ in range(self.height)]
@@ -91,3 +93,32 @@ class Game:
         if self.board[y][x] == Field.EMPTY:
             self.hits_misses_board[y][x] = Field.MISSED
             return ShotResponse(False, None, len(self.ships), self.hits_misses_board)
+
+    def random_spawn(self, ship_type: ShipType):
+        # recursive algorithm that generates random starting position that isn't already taken by another ship,
+        # then tries to put the ship on the board, if the remainder of the ship tries to take space already taken
+        # by an existing ship which throws an exception in put_ship method, it first tries to put it
+        # in another direction, then if that also doesn't work it reruns the algorithm. it also doesn't run the
+        # algorithm twice on the same data
+
+        tried = []
+
+        def get_random():
+            y = math.floor(random.random() * self.height)
+            x = math.floor(random.random() * self.width)
+            if [y, x] in tried:
+                get_random()
+            direction = math.ceil(random.random() * 2)
+            for ship in self.ships:
+                if [y, x] in ship.coordinates:
+                    get_random()
+            try:
+                self.put_ship(ship_type, y, x, Direction(direction))
+            except Exception:
+                try:
+                    self.put_ship(ship_type, y, x, Direction(1) if direction == 2 else Direction(2))
+                except Exception:
+                    tried.append([y, x])
+                    get_random()
+
+        get_random()
