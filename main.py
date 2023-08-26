@@ -102,22 +102,23 @@ class Game:
 
         tried = []
 
-        def get_random():
+        while True:
             y = math.floor(random.random() * self.height)
             x = math.floor(random.random() * self.width)
             if [y, x] in tried:
-                get_random()
-            direction = math.ceil(random.random() * 2)
-            for ship in self.ships:
-                if [y, x] in ship.coordinates:
-                    get_random()
-            try:
-                self.put_ship(ship_type, y, x, Direction(direction))
-            except Exception:
-                try:
-                    self.put_ship(ship_type, y, x, Direction(1) if direction == 2 else Direction(2))
-                except Exception:
-                    tried.append([y, x])
-                    get_random()
+                continue
 
-        get_random()
+            direction = math.ceil(random.random() * 2)
+            ship_overlap = any([True for ship in self.ships if [y, x] in ship.coordinates])
+
+            if not ship_overlap:
+                try:
+                    self.put_ship(ship_type, y, x, Direction(direction))
+                    break
+                except Exception:
+                    try:
+                        self.put_ship(ship_type, y, x, Direction(1) if direction == 2 else Direction(2))
+                        break
+                    except Exception:
+                        tried.append([y, x])
+                        continue
