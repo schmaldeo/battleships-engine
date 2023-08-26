@@ -46,6 +46,9 @@ class Ship:
     def hit(self, y, x):
         self.hp -= 1
         self.coordinates.remove([y, x])
+        if self.hp == 0:
+            self.sunken = True
+        return self.sunken
 
 
 class ShotResponse:
@@ -80,10 +83,12 @@ class Game:
             self.board[y][x] = Field.HIT
             for ship in self.ships:
                 if [y, x] in ship.coordinates:
-                    ship.hit(y, x)
-                    return ShotResponse(True, ship, 0, self.hits_misses_board)
+                    sunken = ship.hit(y, x)
+                    if sunken:
+                        self.ships.remove(ship)
+                    return ShotResponse(True, ship, len(self.ships), self.hits_misses_board)
         if self.board[y][x] == Field.EMPTY:
             self.hits_misses_board[y][x] = Field.MISSED
-            return ShotResponse(False, None, 0, self.hits_misses_board)
+            return ShotResponse(False, None, len(self.ships), self.hits_misses_board)
 
 
