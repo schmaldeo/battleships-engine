@@ -83,7 +83,6 @@ class Game:
     def shoot(self, y: int, x: int):
         if self.board[y][x] == Field.TAKEN:
             self.hits_misses_board[y][x] = Field.HIT
-            self.board[y][x] = Field.HIT
             for ship in self.ships:
                 if [y, x] in ship.coordinates:
                     sunken = ship.hit(y, x)

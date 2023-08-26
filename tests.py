@@ -66,7 +66,6 @@ class TestGame(unittest.TestCase):
             [[Field.EMPTY, Field.EMPTY],
              [Field.EMPTY, Field.EMPTY]])
 
-
     def test_hit_ship(self):
         game = Game(4, 4)
         ship = game.put_ship(ShipType.DESTROYER, 0, 0, Direction.HORIZONTAL)
