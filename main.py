@@ -133,3 +133,23 @@ class Game:
                     except Exception:
                         tried.append([y, x])
                         continue
+
+    def print_board(self):
+        print("", end=" ")
+        for _ in range(self.width):
+            print("――", end="")
+        print("―")
+        for row in self.board:
+            print("│", end=" ")
+            for field in row:
+                match field:
+                    case Field.EMPTY:
+                        print("•", end=" ")
+                    case Field.TAKEN:
+                        print(u"\u02a4", end=" ")
+            print("│")
+
+        print("", end=" ")
+        for _ in range(self.width):
+            print("――", end="")
+        print("―")
