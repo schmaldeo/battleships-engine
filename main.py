@@ -1,7 +1,6 @@
 from enum import Enum
 import random
 import math
-import copy
 
 
 class Field(Enum):
@@ -73,15 +72,17 @@ class Game:
 
     def put_ship(self, ship_type: ShipType, y: int, x: int, direction: Direction):
         ship = Ship(ship_type, x, y, direction)
-        temp_board = copy.deepcopy(self.board)
+        # double iteration in this case is better than performing a deep copy of the board because the board has a
+        # potentially unlimited size while ships are only 2, 3 or 4 fields long. On top of that it might not even come
+        # to the 2nd iteration if an exception is raised in the first one
         for coordinate in ship.coordinates:
             try:
-                if temp_board[coordinate[0]][coordinate[1]] == Field.TAKEN:
+                if self.board[coordinate[0]][coordinate[1]] == Field.TAKEN:
                     raise Exception("Field already taken")
-                temp_board[coordinate[0]][coordinate[1]] = Field.TAKEN
             except IndexError:
                 raise IndexError("Ship cannot be placed outside of the board")
-        self.board = temp_board
+        for coordinate in ship.coordinates:
+            self.board[coordinate[0]][coordinate[1]] = Field.TAKEN
         self.ships.append(ship)
         return ship
 
