@@ -118,7 +118,7 @@ class Game:
                 continue
 
             direction = round(random.random())
-            ship_overlap = any(ship.coordinates == [x, y] for ship in self.ships)
+            ship_overlap = any(([x, y] in ship.coordinates for ship in self.ships))
 
             if ship_overlap:
                 tried.append([y, x])
