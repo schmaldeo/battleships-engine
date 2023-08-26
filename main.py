@@ -12,8 +12,8 @@ class Field(Enum):
 
 
 class Direction(Enum):
-    HORIZONTAL = 1
-    VERTICAL = 2
+    HORIZONTAL = 0
+    VERTICAL = 1
 
 
 class ShipType(Enum):
@@ -108,16 +108,17 @@ class Game:
         tried = []
         counter = 0
         while True:
-            if counter == math.pow(self.width, self.height):
+            if counter == self.width * self.height:
                 raise Exception("Impossible to put a ship on the board")
             counter += 1
+
             y = math.floor(random.random() * self.height)
             x = math.floor(random.random() * self.width)
             if [y, x] in tried:
                 continue
 
-            direction = math.ceil(random.random() * 2)
-            ship_overlap = any([True for ship in self.ships if [y, x] in ship.coordinates])
+            direction = round(random.random())
+            ship_overlap = any((y, x) in ship.coordinates for ship in self.ships)
 
             if ship_overlap:
                 tried.append([y, x])
@@ -128,7 +129,7 @@ class Game:
                     break
                 except Exception:
                     try:
-                        self.put_ship(ship_type, y, x, Direction(1) if direction == 2 else Direction(2))
+                        self.put_ship(ship_type, y, x, Direction(0) if direction == 1 else Direction(1))
                         break
                     except Exception:
                         tried.append([y, x])
@@ -177,14 +178,3 @@ class Game:
             print("――", end="")
         print("―")
         print(u"• - empty field, × - hit, ○ - missed")
-
-
-test_game = Game(4, 4)
-test_game.random_spawn(ShipType.DESTROYER)
-test_game.random_spawn(ShipType.CRUISER)
-test_game.random_spawn(ShipType.BATTLESHIP)
-test_game.shoot(1, 1)
-test_game.shoot(0, 0)
-test_game.shoot(3, 3)
-test_game.print_board()
-test_game.print_hit_miss_board()
