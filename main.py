@@ -153,3 +153,38 @@ class Game:
         for _ in range(self.width):
             print("――", end="")
         print("―")
+        print(u"• - empty field, \u02a4 - ship")
+
+    def print_hit_miss_board(self):
+        print("", end=" ")
+        for _ in range(self.width):
+            print("――", end="")
+        print("―")
+        for row in self.hits_misses_board:
+            print("│", end=" ")
+            for field in row:
+                match field:
+                    case Field.EMPTY:
+                        print("•", end=" ")
+                    case Field.HIT:
+                        print("×", end=" ")
+                    case Field.MISSED:
+                        print("○", end=" ")
+            print("│")
+
+        print("", end=" ")
+        for _ in range(self.width):
+            print("――", end="")
+        print("―")
+        print(u"• - empty field, × - hit, ○ - missed")
+
+
+test_game = Game(4, 4)
+test_game.random_spawn(ShipType.DESTROYER)
+test_game.random_spawn(ShipType.CRUISER)
+test_game.random_spawn(ShipType.BATTLESHIP)
+test_game.shoot(1, 1)
+test_game.shoot(0, 0)
+test_game.shoot(3, 3)
+test_game.print_board()
+test_game.print_hit_miss_board()
