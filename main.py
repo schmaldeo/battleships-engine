@@ -1,6 +1,7 @@
 from enum import Enum
 import random
 import math
+import copy
 
 
 class Field(Enum):
@@ -45,7 +46,7 @@ class Ship:
             for i in range(x, x + self.hp):
                 self.coordinates.append([y, i])
 
-    def hit(self, y, x):
+    def hit(self):
         self.hp -= 1
         if self.hp == 0:
             self.sunken = True
@@ -62,7 +63,8 @@ class ShotResponse:
 
 class Game:
     def __init__(self, width: int = 8, height: int = 8):
-        # TODO limit on width and height
+        if width < 4 or height < 4:
+            raise ValueError("Board cannot be smaller than 4x4")
         self.width = width
         self.height = height
         self.board = [[Field.EMPTY for _ in range(self.width)] for _ in range(self.height)]
@@ -72,7 +74,7 @@ class Game:
     def put_ship(self, ship_type: ShipType, y: int, x: int, direction: Direction):
         ship = Ship(ship_type, x, y, direction)
         self.ships.append(ship)
-        temp_board = self.board.copy()
+        temp_board = copy.deepcopy(self.board)
         for coordinate in ship.coordinates:
             try:
                 if temp_board[coordinate[0]][coordinate[1]] == Field.TAKEN:
@@ -88,7 +90,7 @@ class Game:
             self.hits_misses_board[y][x] = Field.HIT
             for ship in self.ships:
                 if [y, x] in ship.coordinates:
-                    sunken = ship.hit(y, x)
+                    sunken = ship.hit()
                     if sunken:
                         self.ships.remove(ship)
                     return ShotResponse(True, ship, len(self.ships), self.hits_misses_board)
@@ -106,7 +108,7 @@ class Game:
         tried = []
         counter = 0
         while True:
-            if counter == 100:
+            if counter == math.pow(self.width, self.height):
                 raise Exception("Impossible to put a ship on the board")
             counter += 1
             y = math.floor(random.random() * self.height)
@@ -116,6 +118,9 @@ class Game:
 
             direction = math.ceil(random.random() * 2)
             ship_overlap = any([True for ship in self.ships if [y, x] in ship.coordinates])
+
+            if ship_overlap:
+                tried.append([y, x])
 
             if not ship_overlap:
                 try:
