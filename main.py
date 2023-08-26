@@ -73,7 +73,6 @@ class Game:
 
     def put_ship(self, ship_type: ShipType, y: int, x: int, direction: Direction):
         ship = Ship(ship_type, x, y, direction)
-        self.ships.append(ship)
         temp_board = copy.deepcopy(self.board)
         for coordinate in ship.coordinates:
             try:
@@ -83,6 +82,7 @@ class Game:
             except IndexError:
                 raise IndexError("Ship cannot be placed outside of the board")
         self.board = temp_board
+        self.ships.append(ship)
         return ship
 
     def shoot(self, y: int, x: int):
@@ -118,7 +118,7 @@ class Game:
                 continue
 
             direction = round(random.random())
-            ship_overlap = any((y, x) in ship.coordinates for ship in self.ships)
+            ship_overlap = any(ship.coordinates == [x, y] for ship in self.ships)
 
             if ship_overlap:
                 tried.append([y, x])
