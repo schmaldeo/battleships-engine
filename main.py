@@ -74,9 +74,12 @@ class Game:
         self.ships.append(ship)
         temp_board = self.board.copy()
         for coordinate in ship.coordinates:
-            if temp_board[coordinate[0]][coordinate[1]] == Field.TAKEN:
-                raise Exception("Field already taken")
-            temp_board[coordinate[0]][coordinate[1]] = Field.TAKEN
+            try:
+                if temp_board[coordinate[0]][coordinate[1]] == Field.TAKEN:
+                    raise Exception("Field already taken")
+                temp_board[coordinate[0]][coordinate[1]] = Field.TAKEN
+            except IndexError:
+                raise IndexError("Ship cannot be placed outside of the board")
         self.board = temp_board
         return ship
 
