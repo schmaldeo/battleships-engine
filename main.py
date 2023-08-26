@@ -94,15 +94,18 @@ class Game:
             return ShotResponse(False, None, len(self.ships), self.hits_misses_board)
 
     def random_spawn(self, ship_type: ShipType):
-        # recursive algorithm that generates random starting position that isn't already taken by another ship,
+        # iterative algorithm that generates random starting position that isn't already taken by another ship,
         # then tries to put the ship on the board, if the remainder of the ship tries to take space already taken
         # by an existing ship which throws an exception in put_ship method, it first tries to put it
-        # in another direction, then if that also doesn't work it reruns the algorithm. it also doesn't run the
-        # algorithm twice on the same data
+        # in another direction, then if that also doesn't work, it reruns the algorithm. it also never runs
+        # on the same data
 
         tried = []
-
+        counter = 0
         while True:
+            if counter == 100:
+                raise Exception("Impossible to put a ship on the board")
+            counter += 1
             y = math.floor(random.random() * self.height)
             x = math.floor(random.random() * self.width)
             if [y, x] in tried:
