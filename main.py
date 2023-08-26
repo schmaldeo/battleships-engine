@@ -91,5 +91,3 @@ class Game:
         if self.board[y][x] == Field.EMPTY:
             self.hits_misses_board[y][x] = Field.MISSED
             return ShotResponse(False, None, len(self.ships), self.hits_misses_board)
-
-
