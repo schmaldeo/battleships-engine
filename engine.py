@@ -60,7 +60,7 @@ class Ship:
 
     def __str__(self):
         return f"Type: {self.ship_type}\nHP: {self.health_points}\nx: {self.x_coordinate}\n\
-        y: {self.y_coordinate}\nDirection: {self.direction}"
+y: {self.y_coordinate}\nDirection: {self.direction}"
 
     def hit(self) -> bool:
         """
@@ -82,7 +82,8 @@ class ShotResponse:
         self.hit_miss_board = hit_miss_board
 
     def __str__(self):
-        return f"Hit: {self.hit}\nShip:\n{self.ship}\nShips left: {self.ships_left}"
+        return (f"Hit: {self.hit}\n{self.ship.ship_type}, {self.ship.health_points} HP"
+                f"\nShips left: {self.ships_left}")
 
     def print_hit_miss_board(self):
         """
@@ -100,6 +101,7 @@ class ShotResponse:
                     case Field.MISSED:
                         print("○", end=" ")
             print("│")
+        print("• - empty field, × - hit, ○ - missed")
 
 
 class Player:
