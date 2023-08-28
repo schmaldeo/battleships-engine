@@ -45,6 +45,9 @@ class Ship:
             for i in range(x, x + self.hp):
                 self.coordinates.append([y, i])
 
+    def __str__(self):
+        return f"Type: {self.ship_type}\nHP: {self.hp}\nx: {self.x}\ny: {self.y}\nDirection: {self.direction}"
+
     def hit(self) -> bool:
         self.hp -= 1
         if self.hp == 0:
@@ -53,11 +56,14 @@ class Ship:
 
 
 class ShotResponse:
-    def __init__(self, hit: bool, ship: Ship | None, ships_left: int, hits_misses_board):
+    def __init__(self, hit: bool, ship: Ship | None, ships_left: int, hit_miss_board):
         self.hit = hit
         self.ship = ship
         self.ships_left = ships_left
-        self.hits_misses_board = hits_misses_board
+        self.hit_miss_board = hit_miss_board
+
+    def __str__(self):
+        return f"Hit: {self.hit}\nShip:\n{self.ship}\nShips left: {self.ships_left}"
 
 
 class Player:
