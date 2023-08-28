@@ -188,7 +188,7 @@ class TestMultiPlayerGame(unittest.TestCase):
              [Field.EMPTY, Field.EMPTY, Field.EMPTY, Field.EMPTY]]
         )
 
-        game.shoot(game.player2, 0, 0)
+        game.shoot(2, 0, 0)
         self.assertTrue(
             game.player2.hit_miss_board ==
             [[Field.HIT, Field.EMPTY, Field.EMPTY, Field.EMPTY],
@@ -197,7 +197,7 @@ class TestMultiPlayerGame(unittest.TestCase):
              [Field.EMPTY, Field.EMPTY, Field.EMPTY, Field.EMPTY]]
         )
 
-        game.shoot(game.player2, 1, 0)
+        game.shoot(2, 1, 0)
         self.assertTrue(
             game.player2.hit_miss_board ==
             [[Field.HIT, Field.EMPTY, Field.EMPTY, Field.EMPTY],

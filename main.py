@@ -221,11 +221,16 @@ class MultiPlayerGame:
         self.player1 = Player(width, height)
         self.player2 = Player(width, height)
 
-    def shoot(self, shooter: Player, y: int, x: int):
-        if shooter is not self.player1 and shooter is not self.player2:
-            raise ValueError("Passed player doesn't take part in the game")
+    def shoot(self, shooter_index: int, y: int, x: int):
+        if shooter_index == 1:
+            shooter = self.player1
+            receiver = self.player2
+        elif shooter_index == 2:
+            shooter = self.player2
+            receiver = self.player1
+        else:
+            raise ValueError("Wrong player index passed")
 
-        receiver = self.player1 if shooter is self.player2 else self.player2
         if receiver.board[y][x] == Field.TAKEN:
             shooter.hit_miss_board[y][x] = Field.HIT
             for ship in receiver.ships:
