@@ -137,10 +137,13 @@ class Game:
                         continue
 
     def print_board(self):
+        # top border
         print("", end=" ")
         for _ in range(self.width):
             print("――", end="")
         print("―")
+
+        # board
         for row in self.board:
             print("│", end=" ")
             for field in row:
@@ -151,6 +154,7 @@ class Game:
                         print(u"\u02a4", end=" ")
             print("│")
 
+        # bottom border
         print("", end=" ")
         for _ in range(self.width):
             print("――", end="")
@@ -158,10 +162,13 @@ class Game:
         print(u"• - empty field, \u02a4 - ship")
 
     def print_hit_miss_board(self):
+        # top border
         print("", end=" ")
         for _ in range(self.width):
             print("――", end="")
         print("―")
+
+        # board
         for row in self.hits_misses_board:
             print("│", end=" ")
             for field in row:
@@ -174,6 +181,7 @@ class Game:
                         print("○", end=" ")
             print("│")
 
+        # bottom border
         print("", end=" ")
         for _ in range(self.width):
             print("――", end="")
