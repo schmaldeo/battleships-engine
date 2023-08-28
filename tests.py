@@ -68,6 +68,9 @@ class TestSinglePlayerGame(unittest.TestCase):
              [Field.EMPTY, Field.EMPTY, Field.EMPTY, Field.EMPTY],
              [Field.EMPTY, Field.EMPTY, Field.EMPTY, Field.EMPTY]])
 
+        with self.assertRaises(ValueError):
+            SinglePlayerGame(3, 3)
+
     def test_hit_ship(self):
         game = SinglePlayerGame(4, 4)
         ship = game.player.put_ship(ShipType.DESTROYER, 0, 0, Direction.HORIZONTAL)
@@ -205,6 +208,22 @@ class TestMultiPlayerGame(unittest.TestCase):
              [Field.EMPTY, Field.EMPTY, Field.EMPTY, Field.EMPTY],
              [Field.EMPTY, Field.EMPTY, Field.EMPTY, Field.EMPTY]]
         )
+
+        with self.assertRaises(ValueError):
+            game.shoot(0, 1, 1)
+
+
+class TestPlayer(unittest.TestCase):
+    def test_putting_ship_on_taken_field(self):
+        game = SinglePlayerGame(4, 4)
+        game.player.put_ship(ShipType.BATTLESHIP, 0, 0, Direction.HORIZONTAL)
+        with self.assertRaises(ValueError):
+            game.player.put_ship(ShipType.DESTROYER, 0, 1, Direction.VERTICAL)
+
+    def test_putting_ship_outside_the_board(self):
+        game = SinglePlayerGame(4, 4)
+        with self.assertRaises(ValueError):
+            game.player.put_ship(ShipType.BATTLESHIP, 0, 1, Direction.HORIZONTAL)
 
 
 unittest.main()
