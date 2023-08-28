@@ -1,5 +1,5 @@
 import unittest
-from engine import *
+from engine import SinglePlayerGame, MultiPlayerGame, Field, ShipType, Direction
 
 
 class TestSinglePlayerGame(unittest.TestCase):
