@@ -1,9 +1,11 @@
 # Battleships Game Engine
 This is my implementation of [florinpop17's app idea](https://github.com/florinpop17/app-ideas/blob/master/Projects/3-Advanced/Battleship-Game-Engine.md). It's written in Python and makes extensive use of OOP
 features built into the language.
-It's still in development and contains basic features. It doesn't contain any interactive layer yet and probably never 
-will. The reason behind that is that I want to keep it an engine, a core on which you could build such interactive 
-applications. Therefore, if I were to make one, it would be published in a different repo.
+
+The engine itself doesn't contain any interactive layer, as I want to just make it a core for
+actual interactive battleships games that might want to use features that are ready.
+There are, however, 2 interactive examples in the `examples` directory of this repo. If you want
+to try them out, pull this repository and run them with Python 3.10 or newer.
 
 ## Features
 - Single- and multiplayer
