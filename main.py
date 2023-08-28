@@ -60,14 +60,12 @@ class ShotResponse:
         self.hits_misses_board = hits_misses_board
 
 
-class Game:
-    def __init__(self, width: int = 8, height: int = 8):
-        if width < 4 or height < 4:
-            raise ValueError("Board cannot be smaller than 4x4")
+class Player:
+    def __init__(self, width: int, height: int):
         self.width = width
         self.height = height
-        self.board = [[Field.EMPTY for _ in range(self.width)] for _ in range(self.height)]
-        self.hits_misses_board = [[Field.EMPTY for _ in range(self.width)] for _ in range(self.height)]
+        self.board = [[Field.EMPTY for _ in range(width)] for _ in range(height)]
+        self.hit_miss_board = [[Field.EMPTY for _ in range(width)] for _ in range(height)]
         self.ships = []
 
     def put_ship(self, ship_type: ShipType, y: int, x: int, direction: Direction) -> Ship:
@@ -85,19 +83,6 @@ class Game:
             self.board[coordinate[0]][coordinate[1]] = Field.TAKEN
         self.ships.append(ship)
         return ship
-
-    def shoot(self, y: int, x: int) -> ShotResponse:
-        if self.board[y][x] == Field.TAKEN:
-            self.hits_misses_board[y][x] = Field.HIT
-            for ship in self.ships:
-                if [y, x] in ship.coordinates:
-                    sunken = ship.hit()
-                    if sunken:
-                        self.ships.remove(ship)
-                    return ShotResponse(True, ship, len(self.ships), self.hits_misses_board)
-        if self.board[y][x] == Field.EMPTY:
-            self.hits_misses_board[y][x] = Field.MISSED
-            return ShotResponse(False, None, len(self.ships), self.hits_misses_board)
 
     def random_spawn(self, ship_type: ShipType) -> Ship:
         # iterative algorithm that generates random starting position that isn't already taken by another ship,
@@ -128,11 +113,11 @@ class Game:
                 try:
                     ship = self.put_ship(ship_type, y, x, Direction(direction))
                     return ship
-                except ValueError:
+                except (ValueError, IndexError):
                     try:
                         ship = self.put_ship(ship_type, y, x, Direction(0) if direction == 1 else Direction(1))
                         return ship
-                    except ValueError:
+                    except (ValueError, IndexError):
                         tried.append([y, x])
                         continue
 
@@ -169,7 +154,7 @@ class Game:
         print("―")
 
         # board
-        for row in self.hits_misses_board:
+        for row in self.hit_miss_board:
             print("│", end=" ")
             for field in row:
                 match field:
@@ -187,3 +172,37 @@ class Game:
             print("――", end="")
         print("―")
         print(u"• - empty field, × - hit, ○ - missed")
+
+
+class SinglePlayerGame:
+    def __init__(self, width: int = 8, height: int = 8):
+        if width < 4 or height < 4:
+            raise ValueError("Board cannot be smaller than 4x4")
+        self.player = Player(width, height)
+
+    # this method automatically spawns a destroyer, a cruiser and a battleship in a random spot on the board, as
+    # described in https://github.com/florinpop17/app-ideas/blob/master/Projects/3-Advanced/Battleship-Game-Engine.md#bge
+    # TODO: add presets?
+    def random_spawn(self):
+        self.player.random_spawn(ShipType.DESTROYER)
+        self.player.random_spawn(ShipType.CRUISER)
+        self.player.random_spawn(ShipType.BATTLESHIP)
+
+    def shoot(self, y: int, x: int) -> ShotResponse:
+        if self.player.board[y][x] == Field.TAKEN:
+            self.player.hit_miss_board[y][x] = Field.HIT
+            for ship in self.player.ships:
+                if [y, x] in ship.coordinates:
+                    sunken = ship.hit()
+                    if sunken:
+                        self.player.ships.remove(ship)
+                    return ShotResponse(True, ship, len(self.player.ships), self.player.hit_miss_board)
+        if self.player.board[y][x] == Field.EMPTY:
+            self.player.hit_miss_board[y][x] = Field.MISSED
+            return ShotResponse(False, None, len(self.player.ships), self.player.hit_miss_board)
+
+    def print_board(self):
+        self.player.print_board()
+
+    def print_hit_miss_board(self):
+        self.player.print_hit_miss_board()
