@@ -139,4 +139,72 @@ class TestSinglePlayerGame(unittest.TestCase):
         )
 
 
+class TestMultiPlayerGame(unittest.TestCase):
+    def test_create_game(self):
+        game = MultiPlayerGame(4, 4)
+        self.assertTrue(
+            game.player1.board ==
+            [[Field.EMPTY, Field.EMPTY, Field.EMPTY, Field.EMPTY],
+             [Field.EMPTY, Field.EMPTY, Field.EMPTY, Field.EMPTY],
+             [Field.EMPTY, Field.EMPTY, Field.EMPTY, Field.EMPTY],
+             [Field.EMPTY, Field.EMPTY, Field.EMPTY, Field.EMPTY]]
+        )
+
+        self.assertTrue(
+            game.player2.board ==
+            [[Field.EMPTY, Field.EMPTY, Field.EMPTY, Field.EMPTY],
+             [Field.EMPTY, Field.EMPTY, Field.EMPTY, Field.EMPTY],
+             [Field.EMPTY, Field.EMPTY, Field.EMPTY, Field.EMPTY],
+             [Field.EMPTY, Field.EMPTY, Field.EMPTY, Field.EMPTY]]
+        )
+
+    def test_put_ships(self):
+        game = MultiPlayerGame(4, 4)
+        game.player1.put_ship(ShipType.DESTROYER, 0, 0, Direction.HORIZONTAL)
+        self.assertTrue(
+            game.player1.board ==
+            [[Field.TAKEN, Field.TAKEN, Field.EMPTY, Field.EMPTY],
+             [Field.EMPTY, Field.EMPTY, Field.EMPTY, Field.EMPTY],
+             [Field.EMPTY, Field.EMPTY, Field.EMPTY, Field.EMPTY],
+             [Field.EMPTY, Field.EMPTY, Field.EMPTY, Field.EMPTY]]
+        )
+
+        self.assertTrue(
+            game.player2.board ==
+            [[Field.EMPTY, Field.EMPTY, Field.EMPTY, Field.EMPTY],
+             [Field.EMPTY, Field.EMPTY, Field.EMPTY, Field.EMPTY],
+             [Field.EMPTY, Field.EMPTY, Field.EMPTY, Field.EMPTY],
+             [Field.EMPTY, Field.EMPTY, Field.EMPTY, Field.EMPTY]]
+        )
+
+    def test_shoot_ships(self):
+        game = MultiPlayerGame(4, 4)
+        game.player1.put_ship(ShipType.DESTROYER, 0, 0, Direction.HORIZONTAL)
+        self.assertTrue(
+            game.player1.board ==
+            [[Field.TAKEN, Field.TAKEN, Field.EMPTY, Field.EMPTY],
+             [Field.EMPTY, Field.EMPTY, Field.EMPTY, Field.EMPTY],
+             [Field.EMPTY, Field.EMPTY, Field.EMPTY, Field.EMPTY],
+             [Field.EMPTY, Field.EMPTY, Field.EMPTY, Field.EMPTY]]
+        )
+
+        game.shoot(game.player2, 0, 0)
+        self.assertTrue(
+            game.player2.hit_miss_board ==
+            [[Field.HIT, Field.EMPTY, Field.EMPTY, Field.EMPTY],
+             [Field.EMPTY, Field.EMPTY, Field.EMPTY, Field.EMPTY],
+             [Field.EMPTY, Field.EMPTY, Field.EMPTY, Field.EMPTY],
+             [Field.EMPTY, Field.EMPTY, Field.EMPTY, Field.EMPTY]]
+        )
+
+        game.shoot(game.player2, 1, 0)
+        self.assertTrue(
+            game.player2.hit_miss_board ==
+            [[Field.HIT, Field.EMPTY, Field.EMPTY, Field.EMPTY],
+             [Field.MISSED, Field.EMPTY, Field.EMPTY, Field.EMPTY],
+             [Field.EMPTY, Field.EMPTY, Field.EMPTY, Field.EMPTY],
+             [Field.EMPTY, Field.EMPTY, Field.EMPTY, Field.EMPTY]]
+        )
+
+
 unittest.main()
