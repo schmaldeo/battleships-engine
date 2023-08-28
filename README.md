@@ -5,11 +5,10 @@ never be added to this project. The reason behind that is that I want to keep it
 build such interactive applications. Therefore, if I were to make one, it would be published in a different repo.
 
 ## Features
-- Creating new game
+- Single- and multiplayer
 - Using custom board width and height (at least 4x4)
 - 3 types of ships
-- Putting ships on the board manually
-- Putting ships on the board automatically (random spot, with an iterative algorithm)
+- Putting ships on the board manually and automatically (in a random spot)
 - Shooting ships on board
 - Tracking ships' HP
 - Unicode printing current game board as well as hit-miss board
