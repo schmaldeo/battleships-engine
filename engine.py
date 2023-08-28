@@ -82,8 +82,10 @@ class ShotResponse:
         self.hit_miss_board = hit_miss_board
 
     def __str__(self):
-        return (f"Hit: {self.hit}\n{self.ship.ship_type}, {self.ship.health_points} HP"
-                f"\nShips left: {self.ships_left}")
+        if self.ship is not None:
+            return (f"Hit: {self.hit}\n{self.ship.ship_type}, {self.ship.health_points} HP"
+                    f"\nShips left: {self.ships_left}")
+        return f"Hit: {self.hit}\nShips left: {self.ships_left}"
 
     def print_hit_miss_board(self):
         """
@@ -306,6 +308,7 @@ class MultiPlayerGame:
         :param shooter_index: Index of the player which shoots opponent's ship (1 or 2)
         :param y_coordinate: Y coordinate of the field
         :param x_coordinate: X coordinate of the field
+        :raises ValueError if field has already been shot
         :return: ShotResponse object with details about the outcome
         """
         if shooter_index == 1:
@@ -318,6 +321,8 @@ class MultiPlayerGame:
             raise ValueError("Wrong player index passed")
 
         if receiver.board[y_coordinate][x_coordinate] == Field.TAKEN:
+            if shooter.hit_miss_board[y_coordinate][x_coordinate] is not Field.EMPTY:
+                raise ValueError("You already shot that field")
             shooter.hit_miss_board[y_coordinate][x_coordinate] = Field.HIT
             for ship in receiver.ships:
                 if [y_coordinate, x_coordinate] in ship.coordinates:
@@ -326,6 +331,8 @@ class MultiPlayerGame:
                         receiver.ships.remove(ship)
                     return ShotResponse(True, ship, len(receiver.ships), shooter.hit_miss_board)
         if receiver.board[y_coordinate][x_coordinate] == Field.EMPTY:
+            if shooter.hit_miss_board[y_coordinate][x_coordinate] is not Field.EMPTY:
+                raise ValueError("You already shot that field")
             shooter.hit_miss_board[y_coordinate][x_coordinate] = Field.MISSED
             return ShotResponse(False, None, len(receiver.ships), shooter.hit_miss_board)
         return None
