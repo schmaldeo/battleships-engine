@@ -45,7 +45,7 @@ class Ship:
             for i in range(x, x + self.hp):
                 self.coordinates.append([y, i])
 
-    def hit(self):
+    def hit(self) -> bool:
         self.hp -= 1
         if self.hp == 0:
             self.sunken = True
@@ -70,7 +70,7 @@ class Game:
         self.hits_misses_board = [[Field.EMPTY for _ in range(self.width)] for _ in range(self.height)]
         self.ships = []
 
-    def put_ship(self, ship_type: ShipType, y: int, x: int, direction: Direction):
+    def put_ship(self, ship_type: ShipType, y: int, x: int, direction: Direction) -> Ship:
         ship = Ship(ship_type, x, y, direction)
         # double iteration in this case is better than performing a deep copy of the board because the board has a
         # potentially unlimited size while ships are only 2, 3 or 4 fields long. On top of that it might not even come
@@ -86,7 +86,7 @@ class Game:
         self.ships.append(ship)
         return ship
 
-    def shoot(self, y: int, x: int):
+    def shoot(self, y: int, x: int) -> ShotResponse:
         if self.board[y][x] == Field.TAKEN:
             self.hits_misses_board[y][x] = Field.HIT
             for ship in self.ships:
@@ -99,7 +99,7 @@ class Game:
             self.hits_misses_board[y][x] = Field.MISSED
             return ShotResponse(False, None, len(self.ships), self.hits_misses_board)
 
-    def random_spawn(self, ship_type: ShipType):
+    def random_spawn(self, ship_type: ShipType) -> Ship:
         # iterative algorithm that generates random starting position that isn't already taken by another ship,
         # then tries to put the ship on the board, if the remainder of the ship tries to take space already taken
         # by an existing ship which throws an exception in put_ship method, it first tries to put it
@@ -126,12 +126,12 @@ class Game:
 
             if not ship_overlap:
                 try:
-                    self.put_ship(ship_type, y, x, Direction(direction))
-                    break
+                    ship = self.put_ship(ship_type, y, x, Direction(direction))
+                    return ship
                 except ValueError:
                     try:
-                        self.put_ship(ship_type, y, x, Direction(0) if direction == 1 else Direction(1))
-                        break
+                        ship = self.put_ship(ship_type, y, x, Direction(0) if direction == 1 else Direction(1))
+                        return ship
                     except ValueError:
                         tried.append([y, x])
                         continue
