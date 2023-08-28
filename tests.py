@@ -1,5 +1,5 @@
 import unittest
-from main import *
+from engine import *
 
 
 class TestSinglePlayerGame(unittest.TestCase):
