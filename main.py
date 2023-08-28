@@ -206,3 +206,28 @@ class SinglePlayerGame:
 
     def print_hit_miss_board(self):
         self.player.print_hit_miss_board()
+
+
+class MultiPlayerGame:
+    def __init__(self, width: int = 8, height: int = 8):
+        if width < 4 or height < 4:
+            raise ValueError("Board cannot be smaller than 4x4")
+        self.player1 = Player(width, height)
+        self.player2 = Player(width, height)
+
+    def shoot(self, shooter: Player, y: int, x: int):
+        if shooter is not self.player1 and shooter is not self.player2:
+            raise ValueError("Passed player doesn't take part in the game")
+
+        receiver = self.player1 if shooter is self.player2 else self.player2
+        if receiver.board[y][x] == Field.TAKEN:
+            shooter.hit_miss_board[y][x] = Field.HIT
+            for ship in receiver.ships:
+                if [y, x] in ship.coordinates:
+                    sunken = ship.hit()
+                    if sunken:
+                        receiver.ships.remove(ship)
+                    return ShotResponse(True, ship, len(receiver.ships), shooter.hit_miss_board)
+        if receiver.board[y][x] == Field.EMPTY:
+            shooter.hit_miss_board[y][x] = Field.MISSED
+            return ShotResponse(False, None, len(receiver.ships), shooter.hit_miss_board)
