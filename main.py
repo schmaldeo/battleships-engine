@@ -78,7 +78,7 @@ class Game:
         for coordinate in ship.coordinates:
             try:
                 if self.board[coordinate[0]][coordinate[1]] == Field.TAKEN:
-                    raise Exception("Field already taken")
+                    raise ValueError("Field already taken")
             except IndexError:
                 raise IndexError("Ship cannot be placed outside of the board")
         for coordinate in ship.coordinates:
@@ -128,11 +128,11 @@ class Game:
                 try:
                     self.put_ship(ship_type, y, x, Direction(direction))
                     break
-                except Exception:
+                except ValueError:
                     try:
                         self.put_ship(ship_type, y, x, Direction(0) if direction == 1 else Direction(1))
                         break
-                    except Exception:
+                    except ValueError:
                         tried.append([y, x])
                         continue
 
